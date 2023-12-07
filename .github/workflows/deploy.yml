@@ -48,5 +48,9 @@ jobs:
         run: pnpm run build
 
       - name: Publish current build to surge.sh
-        working-directory: ./client
-        run: pnpm run deploy
+        uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: 'dn-status.surge.sh'
+          project: './client/dist'
+          login: ${{ secrets.surge_login }}
+          token: ${{ secrets.surge_token }}
