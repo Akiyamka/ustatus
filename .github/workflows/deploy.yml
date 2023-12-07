@@ -40,9 +40,11 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Prepare env
+        working-directory: ./client
         run: pnpm install
 
       - name: Generate your content
+        working-directory: ./client
         run: pnpm run build
 
       - name: Publish current build to GitHub Pages
