@@ -10,7 +10,7 @@ interface StatusCheckRecord {
 }
 
 async function fetchHistory() {
-  const response = await fetch('https://daemon.ustatus-daemon.workers.dev/api/history');
+  const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/history`);
   return (await response.json()) as StatusCheckRecord[];
 }
 

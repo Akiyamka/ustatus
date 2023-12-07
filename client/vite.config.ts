@@ -9,13 +9,13 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
-    // includeSource: ['src/**/*.ts', 'src/**/*.tsx'],
-    // deps: {
-    //   optimizer: {
-    //     web: {
-    //       include: ['src/**/*.ts', 'src/**/*.tsx'],
-    //     },
-    //   },
-    // },
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://jsonplaceholder.typicode.com',
+        changeOrigin: true,
+      },
+    },
   },
 });
