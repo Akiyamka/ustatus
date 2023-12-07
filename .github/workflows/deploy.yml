@@ -3,7 +3,7 @@ name: Deploy to github pages
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
 
 env:
   NODE_ENV: production
@@ -49,5 +49,5 @@ jobs:
         uses: rayluo/github-pages-overwriter@v1.3
 
         with:
-          source-directory: dist/client
+          source-directory: client/dist
           target-branch: www
