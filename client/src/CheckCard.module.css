@@ -1,0 +1,120 @@
+.checkCard {
+  display: inline-flex;
+  flex-flow: column nowrap;
+  gap: 8px;
+  background-color: #2f2f2f;
+  box-shadow: 0px 2px 0px 1px rgba(0, 0, 0, 0.2), 0px 1px 10px -6px rgba(0, 0, 0, 02);
+  padding: 16px;
+  border-radius: 8px;
+  margin: 8px;
+}
+
+.checkCardBody {
+  display: inline-grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.sectionName {
+  opacity: 0.8;
+  font-size: smaller;
+  margin-bottom: 4px;
+  margin-top: 8px;
+}
+
+/* Header */
+
+.cardHeader {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.checkName {
+  font-size: larger;
+}
+
+/* Status */
+
+.statusSection {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+}
+
+.status {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  border-radius: 4px;
+  background-color: hsla(0, 0%, 100%, 0.07);
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.statusIndicator {
+  display: block;
+  width: 1em;
+  height: 1em;
+  margin: 10px 4px;
+  border-radius: 50%;
+}
+
+.successStatus {
+  background-color: #5eb95e;
+}
+
+.warningStatus {
+  background-color: #ffff6d;
+}
+
+.errorStatus {
+  background-color: #ff3131;
+}
+
+.statusDetails {
+  margin: 3px;
+}
+
+.statusMessage {
+  font-size: smaller;
+}
+
+/* History */
+
+.historySection {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+}
+
+.checksGrid {
+  display: inline-grid;
+  grid-template-columns: repeat(7, 1em);
+  grid-template-rows: repeat(3, 1em);
+  gap: 4px;
+  background-color: hsla(0, 0%, 100%, 0.07);
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.checkRecord {
+  display: block;
+  width: 1em;
+  height: 1em;
+}
+
+/* Uptime */
+
+.uptimeSection {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+}
+
+.uptime {
+  font-size: 38px;
+  margin: 0 4px;
+  opacity: .8;
+}

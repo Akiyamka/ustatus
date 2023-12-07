@@ -3,7 +3,7 @@ export interface CheckConfig {
 	name: string;
 	description?: string;
 	url: string;
-	parameters?: RequestInit<RequestInitCfProperties>;
+	parameters?: RequestInit;
 	created_at: number;
 }
 

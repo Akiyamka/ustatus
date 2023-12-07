@@ -1,7 +1,6 @@
-import { Check } from './types/Check';
-import { HistoryRecord } from './types/HistoryRecord';
+import { CheckConfig, CheckResult } from './types/Check';
 
-type CheckResult =
+type CheckResponse =
 	| {
 			check_id: number;
 			response: Response;
@@ -13,7 +12,11 @@ type CheckResult =
 			response?: undefined;
 	  };
 
-async function performCheck({ parameters, url, id: check_id }: Check): Promise<CheckResult> {
+async function performCheck({
+	parameters,
+	url,
+	id: check_id,
+}: CheckConfig): Promise<CheckResponse> {
 	try {
 		const response = await (parameters ? fetch(url, parameters) : fetch(url));
 		return { check_id, response };
@@ -26,8 +29,8 @@ async function performCheck({ parameters, url, id: check_id }: Check): Promise<C
 	}
 }
 
-function extractCheckResult(results: PromiseSettledResult<CheckResult>[]) {
-	const checked: HistoryRecord[] = [];
+function extractCheckResult(results: PromiseSettledResult<CheckResponse>[]) {
+	const checked: CheckResult[] = [];
 	const failed: PromiseRejectedResult[] = [];
 	results.forEach((result) => {
 		if (result.status === 'fulfilled') {
@@ -35,13 +38,13 @@ function extractCheckResult(results: PromiseSettledResult<CheckResult>[]) {
 			checked.push(
 				error
 					? {
-							checkId: check_id,
-							status: 0,
-							message: error,
+							check_id,
+							status_code: 0,
+							comment: error,
 					  }
 					: {
-							checkId: check_id,
-							status: Number(response),
+							check_id,
+							status_code: Number(response),
 					  }
 			);
 		} else {
@@ -52,7 +55,7 @@ function extractCheckResult(results: PromiseSettledResult<CheckResult>[]) {
 	return [checked, failed] as const;
 }
 
-export async function checkAll(checks: Check[]) {
+export async function checkAll(checks: CheckConfig[]): Promise<CheckResult[]> {
 	const results = await Promise.allSettled(checks.map(performCheck));
 	const [checked, failed] = extractCheckResult(results);
 

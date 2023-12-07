@@ -1,35 +1,25 @@
-import { For, createResource } from 'solid-js';
-import './App.css';
+import { For, Show, Suspense, createResource } from 'solid-js';
+import s from './App.module.css';
+import { CheckCard } from 'CheckCard';
+import { api } from 'api';
 
-interface StatusCheckRecord {
-  record_id: number;
-  check_id: number;
-  status_code: number;
-  comment: string;
-  created_at: number;
-}
 
-async function fetchHistory() {
-  const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/history`);
-  return (await response.json()) as StatusCheckRecord[];
-}
+export function App() {
+  const [checks] = createResource(() => api.fetchChecks(), {
+    initialValue: [],
+  });
 
-function App() {
-  const [data, { refetch }] = createResource(fetchHistory);
-  setInterval(() => refetch, 10000);
-  return data.loading ? (
-    'Loading...'
-  ) : (
-    <div>
-      <For each={data()}>
-        {(item, index) => (
-          <div>
-            #{index()} {item.status_code} {item.comment}
-          </div>
-        )}
-      </For>
+  return (
+    <div class={s.app}>
+      <h1 class={s.title}>Disaster Ninja Status</h1>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Show
+          when={checks().length > 0}
+          fallback={<h2 style={{ 'text-align': 'center' }}>No data available</h2>}
+        >
+          <For each={checks()}>{(check) => <CheckCard check={check} />}</For>
+        </Show>
+      </Suspense>
     </div>
   );
 }
-
-export default App;

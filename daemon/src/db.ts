@@ -1,7 +1,7 @@
-import { Check } from './types/Check';
-import { HistoryRecord } from './types/HistoryRecord';
+import { CheckConfig } from './types/Check';
+import { CheckResult } from "./types/Check";
 
-interface CheckDTO extends Omit<Check, 'parameters'> {
+interface CheckDTO extends Omit<CheckConfig, 'parameters'> {
 	parameters?: string;
 }
 
@@ -11,18 +11,24 @@ export class DBClient {
 		this.db = env.D1Database;
 	}
 
-	async addHistoryRecords(records: HistoryRecord[]) {
+	async addHistoryRecords(records: CheckResult[]) {
 		if (records.length) {
-			const transaction = this.db.prepare('INSERT INTO history (check_id, status_code, comment) VALUES (?1, ?2, ?3)');
-			records.forEach(({ checkId, status, message }) => transaction.bind(checkId, status, message));
+			const transaction = this.db.prepare(
+				'INSERT INTO history (check_id, status_code, comment) VALUES (?1, ?2, ?3)'
+			);
+			records.forEach(({ check_id, status_code, comment }) =>
+				transaction.bind(check_id, status_code, comment)
+			);
 			const { success } = await transaction.run();
 			return { success };
 		}
 		return { success: true };
 	}
 
-	async getChecks(): Promise<Check[]> {
-		const { results, success, error } = await this.db.prepare('SELECT * FROM history').all();
+	async getChecks(): Promise<CheckConfig[]> {
+		const { results, success, error } = await this.db
+			.prepare('SELECT * FROM history')
+			.all();
 		if (success) {
 			return (results as unknown as CheckDTO[]).reduce((acc, r) => {
 				try {
@@ -40,7 +46,7 @@ export class DBClient {
 				} finally {
 					return acc;
 				}
-			}, [] as Check[]);
+			}, [] as CheckConfig[]);
 		} else {
 			console.error(error);
 			return [];
@@ -48,7 +54,9 @@ export class DBClient {
 	}
 
 	async getHistory() {
-		const { results } = await this.db.prepare('SELECT * FROM history ORDER BY created_at DESC LIMIT 100').all();
+		const { results } = await this.db
+			.prepare('SELECT * FROM history ORDER BY created_at DESC LIMIT 100')
+			.all();
 		return results;
 	}
 }

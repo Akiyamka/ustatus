@@ -11,6 +11,7 @@
     "deploy": "surge ./dist --domain dn-status.surge.sh"
   },
   "dependencies": {
+    "date-fns": "^2.30.0",
     "happy-dom": "^12.10.3",
     "promise-deferred": "^2.0.4",
     "solid-js": "^1.8.7",
