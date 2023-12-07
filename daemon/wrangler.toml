@@ -1,0 +1,14 @@
+name = "daemon"
+main = "src/index.ts"
+compatibility_date = "2023-11-21"
+
+# Cron Triggers
+# Docs: https://developers.cloudflare.com/workers/platform/triggers/cron-triggers/
+# Configuration: https://developers.cloudflare.com/workers/wrangler/configuration/#triggers
+[triggers]
+crons = ["1 0 * * *"] # * * * * * = run every minute
+
+[[d1_databases]]
+binding = "D1Database" # i.e. available in your Worker on env.DB
+database_name = "ustatus-db"
+database_id = "ca2d0c31-2227-4b18-b293-de2abb8dcb72"
