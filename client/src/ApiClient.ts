@@ -7,17 +7,17 @@ export class ApiClient {
 	}
 
 	async fetchChecks(): Promise<CheckConfig[]> {
-		const response = await fetch(`${this.endpoint}/checks`);
+		const response = await fetch(`${this.endpoint}/checks/settings`);
 		return (await response.json()) as CheckConfig[];
 	}
 
 	async fetchCheckHistory(checkId: number): Promise<RecordedCheckResult[]> {
-		const response = await fetch(`${this.endpoint}/checks/${checkId}/history`);
+		const response = await fetch(`${this.endpoint}/checks/history/${checkId}`);
 		return (await response.json()) as RecordedCheckResult[];
 	}
 
 	async runCheck(checkId: number): Promise<CheckResult & { timestamp: number }> {
-		const response = await fetch(`${this.endpoint}/checks/${checkId}/run`);
+		const response = await fetch(`${this.endpoint}/checks/run/${checkId}`);
 		const json = (await response.json()) as CheckResult;
 		return {
 			...json,

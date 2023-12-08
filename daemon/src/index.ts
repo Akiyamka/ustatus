@@ -1,25 +1,39 @@
+import { error, json } from 'itty-router';
 import { checkAll } from './checker';
 import { DBClient } from './db';
-import { RestApi } from './handlers';
+import { corsify, router } from './router';
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const db = new DBClient(env);
-		const url = new URL(request.url);
-		const rest = new RestApi(db);
 
-		switch (url.pathname) {
-			case '/api/history':
-			case '/api/history/':
-				return rest.history();
+		router.get('/api/checks/history', () => db.getHistory());
+		router.get<{ checkId: string }>('/api/checks/history/:checkId', ({ checkId }) =>
+			db.getHistory(checkId)
+		);
+		router.get('/api/checks/settings', () => db.getChecks());
+		router.get<{ checkId: string }>('/api/checks/settings/:checkId', ({ checkId }) =>
+			db.getChecks(checkId)
+		);
+		router.get<{ checkId: string }>('/api/checks/run/:checkId', async ({ checkId }) => {
+			const checks = await db.getChecks(checkId);
+			const results = await checkAll(checks);
+			return results;
+		});
 
-			case '/api/checks':
-			case '/api/checks/':
-				return rest.checks();
+		// 404 for everything else
+		router.all('*', () => new Response('Not Found.', { status: 404 }));
 
-			default:
-				return new Response('This page not exist', { status: 404 });
-		}
+		return (
+			router
+				.handle(request, env, ctx)
+				// turn any returned raw data into JSON
+				.then(json)
+				// catch errors BEFORE corsify
+				.catch(error)
+				// corsify all Responses (including errors)
+				.then(corsify)
+		);
 	},
 
 	// The scheduled handler is invoked at the interval set in our wrangler.toml's

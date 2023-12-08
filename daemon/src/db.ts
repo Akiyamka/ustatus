@@ -1,5 +1,5 @@
 import { CheckConfig } from './types/Check';
-import { CheckResult } from "./types/Check";
+import { CheckResult } from './types/Check';
 
 interface CheckDTO extends Omit<CheckConfig, 'parameters'> {
 	parameters?: string;
@@ -25,9 +25,11 @@ export class DBClient {
 		return { success: true };
 	}
 
-	async getChecks(): Promise<CheckConfig[]> {
+	async getChecks(checkId?: string): Promise<CheckConfig[]> {
 		const { results, success, error } = await this.db
-			.prepare('SELECT * FROM history')
+			.prepare(
+				checkId ? `SELECT * FROM checks WHERE id = ${checkId}` : 'SELECT * FROM checks'
+			)
 			.all();
 		if (success) {
 			return (results as unknown as CheckDTO[]).reduce((acc, r) => {
@@ -53,9 +55,13 @@ export class DBClient {
 		}
 	}
 
-	async getHistory() {
+	async getHistory(checkId?: string, limit = 12) {
 		const { results } = await this.db
-			.prepare('SELECT * FROM history ORDER BY created_at DESC LIMIT 100')
+			.prepare(
+				checkId
+					? `SELECT * FROM history WHERE check_id = ${checkId} ORDER BY created_at DESC LIMIT ${limit}`
+					: `SELECT * FROM history ORDER BY created_at DESC LIMIT ${limit}`
+			)
 			.all();
 		return results;
 	}
