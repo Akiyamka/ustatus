@@ -1,8 +1,16 @@
 .app {
   max-width: 1060px;
   margin: auto;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .title {
   text-align: center;
+}
+
+.cardsGrid {
+  display: grid;
+  align-self: center;
+  grid-template-columns: repeat(3, 280px);
 }

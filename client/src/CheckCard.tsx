@@ -12,10 +12,13 @@ function getStatusClass(status: number) {
 	};
 }
 
-function CheckCardHeader({ name }: { name: string }) {
+function CheckCardHeader({ name, description }: { name: string; description?: string }) {
 	return (
 		<div class={s.cardHeader}>
 			<span class={s.checkName}>{name}</span>
+			<Show when={description}>
+				{(descr) => <span class={s.checkDescription}>{descr()}</span>}
+			</Show>
 		</div>
 	);
 }
@@ -79,8 +82,12 @@ function HistorySection({
 }
 
 function calculateUptime(checks: RecordedCheckResult[]) {
-	return (checks.filter((c) => c.status_code >= 200 && c.status_code < 299).length /
-		(checks.length / 100)).toFixed(2);
+	return checks.length
+		? `${(
+				checks.filter((c) => c.status_code >= 200 && c.status_code < 299).length /
+				(checks.length / 100)
+			).toFixed(2)}%`
+		: 'Unknown';
 }
 function UptimeSection({
 	checkHistory,
@@ -91,7 +98,7 @@ function UptimeSection({
 	return (
 		<div class={s.uptimeSection}>
 			<span class={s.sectionName}>Uptime:</span>
-			<div class={s.uptime}>{uptime()}%</div>
+			<div class={s.uptime}>{uptime()}</div>
 		</div>
 	);
 }
@@ -111,7 +118,7 @@ export function CheckCard({ check }: { check: CheckConfig }) {
 
 	return (
 		<div class={s.checkCard}>
-			<CheckCardHeader name={check.name} />
+			<CheckCardHeader name={check.name} description={check.description} />
 			<div class={s.checkCardBody}>
 				<Suspense fallback={<div>Loading...</div>}>
 					<StatusSection

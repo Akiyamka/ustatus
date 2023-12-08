@@ -1,4 +1,4 @@
-import { error, json } from 'itty-router';
+import { error, json, withParams } from 'itty-router';
 import { checkAll } from './checker';
 import { DBClient } from './db';
 import { corsify, router } from './router';
@@ -7,21 +7,24 @@ export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const db = new DBClient(env);
 
-		router.get('/api/checks/history', () => db.getHistory());
-		router.get<{ checkId: string }>('/api/checks/history/:checkId', ({ checkId }) =>
-			db.getHistory(checkId)
-		);
-		router.get('/api/checks/settings', () => db.getChecks());
-		router.get<{ checkId: string }>('/api/checks/settings/:checkId', ({ checkId }) =>
-			db.getChecks(checkId)
-		);
-		router.get<{ checkId: string }>('/api/checks/run/:checkId', async ({ checkId }) => {
-			const checks = await db.getChecks(checkId);
-			console.log('checks', checks)
-			const results = await checkAll(checks);
-			console.log('results', results)
-			return results;
-		});
+		router
+			.all('*', withParams)
+			.get('/api/checks/history', () => db.getHistory())
+			.get<{ params: { checkId: string } }>(
+				'/api/checks/history/:checkId',
+				({ params }) => db.getHistory(params.checkId)
+			)
+			.get('/api/checks/settings', () => db.getChecks())
+			.get<{ params: { checkId: string } }>(
+				'/api/checks/settings/:checkId',
+				({ params }) => db.getChecks(params.checkId)
+			)
+			.get('/api/checks/run/:checkId', async ({ params }) => {
+				const { checkId } = params;
+				const checks = await db.getChecks(checkId);
+				const results = await checkAll(checks);
+				return results;
+			});
 
 		// 404 for everything else
 		router.all('*', () => new Response('Not Found.', { status: 404 }));

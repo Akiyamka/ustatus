@@ -21,10 +21,10 @@ async function performCheck({
 		const response = await (parameters ? fetch(url, parameters) : fetch(url));
 		return { check_id, response };
 	} catch (e) {
-		if (e instanceof Error) {
-			return { check_id, error: e.message };
+		if (typeof e === 'object' && e !== null && 'message' in e) {
+			return { check_id, error: String(e.message) };
 		} else {
-			return { check_id, error: String(e) };
+			return { check_id, error: String('Unknown') };
 		}
 	}
 }
@@ -45,7 +45,7 @@ function extractCheckResult(results: PromiseSettledResult<CheckResponse>[]) {
 					: {
 							check_id,
 							status_code: Number(response?.status),
-							comment: response?.statusText
+							comment: response?.statusText,
 					  }
 			);
 		} else {

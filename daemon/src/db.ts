@@ -35,9 +35,10 @@ export class DBClient {
 			return (results as unknown as CheckDTO[]).reduce((acc, r) => {
 				try {
 					if (typeof r.parameters === 'string') {
+						// const temp = r.parameters.replaceAll('\\\\', '\\');
 						acc.push({
 							...r,
-							parameters: JSON.parse(r.parameters),
+							parameters: JSON.parse( r.parameters),
 						});
 					} else {
 						const { parameters, ...rest } = r;
