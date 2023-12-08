@@ -17,7 +17,9 @@ export default {
 		);
 		router.get<{ checkId: string }>('/api/checks/run/:checkId', async ({ checkId }) => {
 			const checks = await db.getChecks(checkId);
+			console.log('checks', checks)
 			const results = await checkAll(checks);
+			console.log('results', results)
 			return results;
 		});
 

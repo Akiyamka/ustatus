@@ -31,3 +31,18 @@ VALUES
     'disaster.ninja page',
     'https://disaster.ninja'
   );
+
+INSERT INTO
+  `history` (check_id, status_code, comment)
+VALUES
+  ('1', '200', 'OK');
+
+INSERT INTO
+  `history` (check_id, status_code, comment)
+VALUES
+  ('1', '200', 'OK');
+
+INSERT INTO
+  `history` (check_id, status_code, comment)
+VALUES
+  ('1', '404', 'NOT FOUND');

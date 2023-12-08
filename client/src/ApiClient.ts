@@ -18,7 +18,7 @@ export class ApiClient {
 
 	async runCheck(checkId: number): Promise<CheckResult & { timestamp: number }> {
 		const response = await fetch(`${this.endpoint}/checks/run/${checkId}`);
-		const json = (await response.json()) as CheckResult;
+		const json = (await response.json()).at(0) as CheckResult;
 		return {
 			...json,
 			timestamp: Date.now(),

@@ -44,7 +44,8 @@ function extractCheckResult(results: PromiseSettledResult<CheckResponse>[]) {
 					  }
 					: {
 							check_id,
-							status_code: Number(response),
+							status_code: Number(response?.status),
+							comment: response?.statusText
 					  }
 			);
 		} else {

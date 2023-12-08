@@ -1,4 +1,4 @@
-import { Show, For, createResource, Suspense } from 'solid-js';
+import { Show, For, createResource, Suspense, type Accessor } from 'solid-js';
 import { formatDistanceToNow } from 'date-fns';
 import { api } from 'api';
 import s from 'CheckCard.module.css';
@@ -24,35 +24,46 @@ function StatusSection({
 	currentCheckState,
 	timestamp,
 }: {
-	currentCheckState?: CheckResult;
-	timestamp?: number;
+	currentCheckState: Accessor<CheckResult | undefined>;
+	timestamp: Accessor<number | undefined>;
 }) {
-	const timeDistance = () =>
-		timestamp ? `Checked ${formatDistanceToNow(new Date(timestamp))}` : 'Last check';
-	return currentCheckState ? (
-		<div class={s.statusSection}>
-			<span class={s.sectionName}>Checked {timeDistance()}:</span>
-			<div class={s.status}>
-				<div
-					class={s.statusIndicator}
-					classList={getStatusClass(currentCheckState.status_code)}
-				></div>
-				<div class={s.statusDetails}>
-					<div class={s.statusName}>{currentCheckState.status_code}</div>
-					<div class={s.statusMessage}>{currentCheckState.comment}</div>
+	const timeDistance = () => {
+		const time = timestamp();
+		return time ? `Checked ${formatDistanceToNow(new Date(time))}` : 'Last check';
+	};
+
+	return (
+		<Show when={currentCheckState()}>
+			{(check) => (
+				<div class={s.statusSection}>
+					<span class={s.sectionName}>{timeDistance()}:</span>
+					<div class={s.status}>
+						<div
+							class={s.statusIndicator}
+							classList={getStatusClass(check().status_code)}
+						></div>
+						<div class={s.statusDetails}>
+							<div class={s.statusName}>{check().status_code}</div>
+							<div class={s.statusMessage}>{check().comment}</div>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-	) : null;
+			)}
+		</Show>
+	);
 }
 
-function HistorySection({ checkHistory }: { checkHistory: RecordedCheckResult[] }) {
+function HistorySection({
+	checkHistory,
+}: {
+	checkHistory: Accessor<RecordedCheckResult[]>;
+}) {
 	return (
-		<Show when={checkHistory.length > 0} fallback={null}>
+		<Show when={checkHistory().length > 0} fallback={null}>
 			<div class={s.historySection}>
 				<span class={s.sectionName}>Historical log:</span>
 				<div class={s.checksGrid}>
-					<For each={checkHistory}>
+					<For each={checkHistory()}>
 						{(check) => (
 							<div
 								class={s.checkRecord}
@@ -68,15 +79,19 @@ function HistorySection({ checkHistory }: { checkHistory: RecordedCheckResult[] 
 }
 
 function calculateUptime(checks: RecordedCheckResult[]) {
-	console.log(checks);
-	return 90;
+	return (checks.filter((c) => c.status_code >= 200 && c.status_code < 299).length /
+		(checks.length / 100)).toFixed(2);
 }
-function UptimeSection({ checkHistory }: { checkHistory: RecordedCheckResult[] }) {
-	const uptime = calculateUptime(checkHistory);
+function UptimeSection({
+	checkHistory,
+}: {
+	checkHistory: Accessor<RecordedCheckResult[]>;
+}) {
+	const uptime = () => calculateUptime(checkHistory());
 	return (
 		<div class={s.uptimeSection}>
 			<span class={s.sectionName}>Uptime:</span>
-			<div class={s.uptime}>{uptime}%</div>
+			<div class={s.uptime}>{uptime()}%</div>
 		</div>
 	);
 }
@@ -92,7 +107,7 @@ export function CheckCard({ check }: { check: CheckConfig }) {
 		api.runCheck(check.id),
 	);
 
-	setInterval(() => refetch, 1000000000);
+	setInterval(() => refetch, 180000); // 3 min
 
 	return (
 		<div class={s.checkCard}>
@@ -100,12 +115,14 @@ export function CheckCard({ check }: { check: CheckConfig }) {
 			<div class={s.checkCardBody}>
 				<Suspense fallback={<div>Loading...</div>}>
 					<StatusSection
-						currentCheckState={currentCheckState()}
-						timestamp={currentCheckState()?.timestamp}
+						currentCheckState={currentCheckState}
+						timestamp={() =>
+							currentCheckState ? currentCheckState()?.timestamp : undefined
+						}
 					/>
+					<HistorySection checkHistory={checkHistory} />
+					<UptimeSection checkHistory={checkHistory} />
 				</Suspense>
-				<HistorySection checkHistory={checkHistory()} />
-				<UptimeSection checkHistory={checkHistory()} />
 			</div>
 		</div>
 	);
