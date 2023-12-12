@@ -48,7 +48,7 @@ VALUES
     'Layers API',
     '/layers/search/global',
     'https://test-apps-ninja01.konturlabs.com/active/api/layers/search/global',
-    NULL
+    '{"headers": { "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0","Accept": "*/*","Accept-Language": "en-US,en;q=0.5","Content-Type": "application/json","Sec-Fetch-Dest": "empty","Sec-Fetch-Mode": "cors","Sec-Fetch-Site": "same-origin","Pragma": "no-cache","Cache-Control": "no-cache"},"body": "{\"appId\":\"58851b50-9574-4aec-a3a6-425fa18dcb54\"}","method": "POST"}'
   ),
   (
     'Tiles API',

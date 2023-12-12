@@ -13,11 +13,12 @@ export class DBClient {
 
 	async addHistoryRecords(records: CheckResult[]) {
 		if (records.length) {
-			const transaction = this.db.prepare(
+			let transaction = this.db.prepare(
 				'INSERT INTO history (check_id, status_code, comment) VALUES (?1, ?2, ?3)'
 			);
-			records.forEach(({ check_id, status_code, comment }) =>
-				transaction.bind(check_id, status_code, comment)
+			records.forEach(
+				({ check_id, status_code, comment }) =>
+					(transaction = transaction.bind(check_id, status_code, comment))
 			);
 			const { success } = await transaction.run();
 			return { success };
@@ -38,7 +39,7 @@ export class DBClient {
 						// const temp = r.parameters.replaceAll('\\\\', '\\');
 						acc.push({
 							...r,
-							parameters: JSON.parse( r.parameters),
+							parameters: JSON.parse(r.parameters),
 						});
 					} else {
 						const { parameters, ...rest } = r;
