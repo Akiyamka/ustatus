@@ -1,4 +1,4 @@
-import { CheckConfig, CheckResult } from './types/Check';
+import type { CheckConfig, CheckResult } from '@ustatus/ustatus-types'
 
 type CheckResponse =
 	| {

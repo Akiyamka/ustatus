@@ -1,5 +1,4 @@
-import { CheckConfig } from './types/Check';
-import { CheckResult } from './types/Check';
+import type { CheckConfig, CheckResult } from '@ustatus/ustatus-types'
 
 interface CheckDTO extends Omit<CheckConfig, 'parameters'> {
 	parameters?: string;

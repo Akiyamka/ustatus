@@ -1,5 +1,5 @@
 {
-  "name": "ustatus",
+  "name": "client",
   "private": true,
   "version": "0.0.2",
   "type": "module",
@@ -23,6 +23,7 @@
     "vitest": "^1.0.4"
   },
   "devDependencies": {
+    "@ustatus/ustatus-types": "workspace:^0.0.1",
     "@types/promise-deferred": "^2.0.5",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",

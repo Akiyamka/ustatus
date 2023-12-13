@@ -1,4 +1,4 @@
-import type { CheckConfig, CheckResult, RecordedCheckResult } from './types/Check';
+import type { CheckConfig, CheckResult, RecordedCheckResult } from '@ustatus/ustatus-types'
 
 export class ApiClient {
 	endpoint: string;
@@ -9,6 +9,10 @@ export class ApiClient {
 	async fetchChecks(): Promise<CheckConfig[]> {
 		const response = await fetch(`${this.endpoint}/checks/settings`);
 		return (await response.json()) as CheckConfig[];
+	}
+
+	async fetchGroups(): Promise<GroupConfig[]> {
+		return Promise.resolve([]);
 	}
 
 	async fetchCheckHistory(checkId: number): Promise<RecordedCheckResult[]> {

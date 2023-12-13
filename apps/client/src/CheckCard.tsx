@@ -2,7 +2,8 @@ import { Show, For, createResource, Suspense, type Accessor } from 'solid-js';
 import { formatDistanceToNow } from 'date-fns';
 import { api } from 'api';
 import s from 'CheckCard.module.css';
-import type { CheckConfig, RecordedCheckResult, CheckResult } from 'types/Check';
+import type { CheckConfig, CheckResult, RecordedCheckResult } from '@ustatus/ustatus-types'
+
 
 function getStatusClass(status: number) {
 	return {

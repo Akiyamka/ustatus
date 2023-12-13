@@ -6,23 +6,24 @@
   "shell": {
     "scripts": {
       "dev:client": [
-        "cd ./client",
+        "cd ./apps/client",
         "pnpm run dev"
       ],
       "dev:daemon": [
-        "cd ./daemon",
+        "cd ./apps/daemon",
         "pnpm run dev"
       ],
       "trigger": [
-        "cd ./daemon",
+        "cd ./apps/daemon",
         "pnpm run trigger"
       ],
       "deploy:daemon": [
-        "cd ./daemon",
+        "cd ./apps/daemon",
         "pnpm run deploy"
       ],
       "deploy:client": [
-        "cd ./client",
+        "cd ./apps/client",
+        "pnpm run build",
         "pnpm run deploy"
       ]
     }

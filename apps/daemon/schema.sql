@@ -18,10 +18,19 @@ CREATE TABLE IF NOT EXISTS `checks` (
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `groups`;
+
+CREATE TABLE IF NOT EXISTS `groups` (
+  `id` integer PRIMARY KEY,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+);
+
 ALTER TABLE
   `history`
 ADD
-  `check_id` integer REFERENCES `checks` (`id`);
+  `check_id` integer REFERENCES `checks` (`id`),
+  `group_id` integer REFERENCES `groups` (`id`);
 
 INSERT INTO
   `checks` (name, description, url, parameters)
