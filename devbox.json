@@ -16,6 +16,14 @@
       "trigger": [
         "cd ./daemon",
         "pnpm run trigger"
+      ],
+      "deploy:daemon": [
+        "cd ./daemon",
+        "pnpm run deploy"
+      ],
+      "deploy:client": [
+        "cd ./client",
+        "pnpm run deploy"
       ]
     }
   }
