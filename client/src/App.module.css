@@ -11,6 +11,5 @@
 
 .cardsGrid {
   display: grid;
-  align-self: center;
-  grid-template-columns: repeat(3, 280px);
+  grid-template-columns: repeat(auto-fit, minmax(264px, 1fr));
 }

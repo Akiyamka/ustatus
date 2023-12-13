@@ -13,15 +13,18 @@ export class DBClient {
 
 	async addHistoryRecords(records: CheckResult[]) {
 		if (records.length) {
-			let transaction = this.db.prepare(
+			const transaction = this.db.prepare(
 				'INSERT INTO history (check_id, status_code, comment) VALUES (?1, ?2, ?3)'
 			);
-			records.forEach(
-				({ check_id, status_code, comment }) =>
-					(transaction = transaction.bind(check_id, status_code, comment))
+			const inserts = records.map(({ check_id, status_code, comment }) =>
+				transaction.bind(check_id, status_code, comment)
 			);
-			const { success } = await transaction.run();
-			return { success };
+			const results = await this.db.batch(inserts);
+			if (results.every((r) => r.success)) {
+				return { success: true };
+			} else {
+				throw Error('Some history insertions failed')
+			}
 		}
 		return { success: true };
 	}

@@ -12,6 +12,10 @@
       "dev:daemon": [
         "cd ./daemon",
         "pnpm run dev"
+      ],
+      "trigger": [
+        "cd ./daemon",
+        "pnpm run trigger"
       ]
     }
   }

@@ -2,6 +2,7 @@ import { For, Show, Suspense, createResource } from 'solid-js';
 import s from './App.module.css';
 import { CheckCard } from 'CheckCard';
 import { api } from 'api';
+import './index.css'
 
 export function App() {
 	const [checks] = createResource(() => api.fetchChecks(), {

@@ -32,7 +32,7 @@ function StatusSection({
 }) {
 	const timeDistance = () => {
 		const time = timestamp();
-		return time ? `Checked ${formatDistanceToNow(new Date(time))}` : 'Last check';
+		return time ? `Last check ${formatDistanceToNow(new Date(time))}` : 'Last check';
 	};
 
 	return (
