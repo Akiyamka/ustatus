@@ -109,6 +109,10 @@
   height: 1em;
 }
 
+.checkRecord:hover {
+  outline: 1px solid gray;
+}
+
 /* Uptime */
 
 .uptimeSection {
